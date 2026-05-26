@@ -10,6 +10,7 @@ import {
     Tabs,
     Tab,
     Typography,
+    CircularProgress,
 } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ImageIcon from "@mui/icons-material/Image";
@@ -52,58 +53,59 @@ function UpdateBookData({ open, handleClose, book, setBook, setBooks }) {
     const [file, setFile] = useState(null);
     const [url, setUrl] = useState("");
     const [error, setError] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
     const validate = () => {
-    let err = {};
+        let err = {};
 
-    if (!form.title?.trim()) err.title = "Required";
-    if (!form.author?.trim()) err.author = "Required";
-    if (!form.genre?.trim()) err.genre = "Required";
-    if (!form.publicationYear) err.publicationYear = "Required";
+        if (!form.title?.trim()) err.title = "Required";
+        if (!form.author?.trim()) err.author = "Required";
+        if (!form.genre?.trim()) err.genre = "Required";
+        if (!form.publicationYear) err.publicationYear = "Required";
 
-    // IMAGE
-    if (image) {
-        if (image.size > 2 * 1024 * 1024) {
-            err.image = "Image must be less than 2MB";
+        // IMAGE
+        if (image) {
+            if (image.size > 2 * 1024 * 1024) {
+                err.image = "Image must be less than 2MB";
+            }
+
+            if (!image.type.startsWith("image/")) {
+                err.image = "Invalid image file";
+            }
         }
 
-        if (!image.type.startsWith("image/")) {
-            err.image = "Invalid image file";
-        }
-    }
+        // PDF
+        if (tab === 0) {
+            if (!file && !book?.pdf) {
+                err.file = "Upload PDF required";
+            }
 
-    // PDF
-    if (tab === 0) {
-        if (!file && !book?.pdf) {
-            err.file = "Upload PDF required";
-        }
-
-        if (file && file.size > 25 * 1024 * 1024) {
-            err.file = "PDF must be less than 25MB";
-        }
-    }
-
-    // URL
-    if (tab === 1) {
-        if (!url && !book?.link) {
-            err.url = "URL required";
+            if (file && file.size > 25 * 1024 * 1024) {
+                err.file = "PDF must be less than 25MB";
+            }
         }
 
-        if (url && !url.startsWith("http")) {
-            err.url = "Invalid URL";
+        // URL
+        if (tab === 1) {
+            if (!url && !book?.link) {
+                err.url = "URL required";
+            }
+
+            if (url && !url.startsWith("http")) {
+                err.url = "Invalid URL";
+            }
         }
-    }
 
-    console.log("VALIDATION ERRORS:", err); // 🔥 IMPORTANT
+        console.log("VALIDATION ERRORS:", err); // 🔥 IMPORTANT
 
-    setError(err);
+        setError(err);
 
-    return Object.keys(err).length === 0;
-};
+        return Object.keys(err).length === 0;
+    };
 
     const handleSubmit = async () => {
         if (!validate()) return;
@@ -134,6 +136,7 @@ function UpdateBookData({ open, handleClose, book, setBook, setBooks }) {
             formData.append("link", url);
         }
 
+        setLoading(true);
         const res = await updateBook(book._id, formData);
 
         //here i wanna add this new book in the book list without reffresh the page
@@ -151,6 +154,7 @@ function UpdateBookData({ open, handleClose, book, setBook, setBooks }) {
                 )
             );
 
+            setLoading(false);
             handleClose();
         }
     };
@@ -378,15 +382,15 @@ function UpdateBookData({ open, handleClose, book, setBook, setBooks }) {
                             </Typography>
                         )}
 
-                         {/* Error */}
-                                    {error.file && (
-                                      <Typography
-                                        color="error"
-                                        sx={{ mt: 1 }}
-                                      >
-                                        {error.file}
-                                      </Typography>
-                                    )}
+                        {/* Error */}
+                        {error.file && (
+                            <Typography
+                                color="error"
+                                sx={{ mt: 1 }}
+                            >
+                                {error.file}
+                            </Typography>
+                        )}
 
                         {/* EXISTING FILE */}
                         {!file && book?.pdf && (
@@ -423,8 +427,17 @@ function UpdateBookData({ open, handleClose, book, setBook, setBooks }) {
                         Cancel
                     </Button>
 
-                    <Button fullWidth variant="contained" onClick={handleSubmit}>
-                        Update Book
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        onClick={handleSubmit}
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <CircularProgress size={22} color="inherit" />
+                        ) : (
+                            "Update Book"
+                        )}
                     </Button>
                 </Box>
 
