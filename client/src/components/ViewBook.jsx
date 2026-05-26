@@ -251,7 +251,7 @@ function ViewBook({ open, handleClose, bookId, setBooks }) {
     }}
   >
     <img
-      src={`http://localhost:5000${book.image}`}
+      src={`${import.meta.env.VITE_API_URL}/${book.image}`}
       alt={book.title}
       style={{
         width: "100%",
@@ -292,7 +292,7 @@ function ViewBook({ open, handleClose, bookId, setBooks }) {
             >
 
               <iframe
-                src={`http://localhost:5000${book.pdf}`}
+                src={`${import.meta.env.VITE_API_URL}/${book.pdf}`}
                 width="100%"
                 height="800px"
                 style={{

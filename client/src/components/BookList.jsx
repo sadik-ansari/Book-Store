@@ -464,7 +464,7 @@ function BookList() {
               {/* Right Image */}
               <CardMedia
                 component="img"
-                image={`http://localhost:5000${book.image}`}
+                image={`${import.meta.env.VITE_API_URL}/${book.image}`}
                 alt={book.title}
                 sx={{
                   width: {
