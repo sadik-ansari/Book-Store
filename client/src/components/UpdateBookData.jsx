@@ -17,7 +17,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { createBook, updateBook } from "./api/BookApi";
 
-const GENRES = ["Fiction", "Non-Fiction", "Self-Help", "Science"];
+const GENRES = ["Fiction", "Non-Fiction", "Self-Help", "Science", "Biography", "History", "Fantasy", "Mystery", "Romance", "Thriller", "Young Adult", "Children's"];
 
 const YEARS = Array.from(
     { length: 30 },
