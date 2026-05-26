@@ -71,7 +71,7 @@ const fileFilter = (
 module.exports = multer({
     storage, fileFilter,
     limits: {
-        fileSize: 10 * 1024 * 1024, // 10MB
+        fileSize: 25 * 1024 * 1024, // 25MB
     },
 
 });

@@ -11,7 +11,10 @@ import {
     Tab,
     Typography,
 } from "@mui/material";
-import { createBook, updateBook } from "./BookApi";
+import DescriptionIcon from "@mui/icons-material/Description";
+import ImageIcon from "@mui/icons-material/Image";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { createBook, updateBook } from "./api/BookApi";
 
 const GENRES = ["Fiction", "Non-Fiction", "Self-Help", "Science"];
 
@@ -54,57 +57,65 @@ function UpdateBookData({ open, handleClose, book, setBook, setBooks }) {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-const validate = () => {
+    const validate = () => {
+    let err = {};
 
-  let err = {};
+    if (!form.title?.trim()) err.title = "Required";
+    if (!form.author?.trim()) err.author = "Required";
+    if (!form.genre?.trim()) err.genre = "Required";
+    if (!form.publicationYear) err.publicationYear = "Required";
 
-  if (!form.title)
-    err.title = "Required";
+    // IMAGE
+    if (image) {
+        if (image.size > 2 * 1024 * 1024) {
+            err.image = "Image must be less than 2MB";
+        }
 
-  if (!form.author)
-    err.author = "Required";
+        if (!image.type.startsWith("image/")) {
+            err.image = "Invalid image file";
+        }
+    }
 
-  if (!form.genre)
-    err.genre = "Required";
+    // PDF
+    if (tab === 0) {
+        if (!file && !book?.pdf) {
+            err.file = "Upload PDF required";
+        }
 
-  if (!form.publicationYear)
-    err.publicationYear = "Required";
+        if (file && file.size > 25 * 1024 * 1024) {
+            err.file = "PDF must be less than 25MB";
+        }
+    }
 
-  // PDF tab validation
-  if (
-    tab === 0 &&
-    !file &&
-    !book?.pdf
-  ) {
-    err.file = "Upload PDF required";
-  }
+    // URL
+    if (tab === 1) {
+        if (!url && !book?.link) {
+            err.url = "URL required";
+        }
 
-  // URL tab validation
-  if (
-    tab === 1 &&
-    !url &&
-    !book?.link
-  ) {
-    err.url = "URL required";
-  }
+        if (url && !url.startsWith("http")) {
+            err.url = "Invalid URL";
+        }
+    }
 
-  setError(err);
+    console.log("VALIDATION ERRORS:", err); // 🔥 IMPORTANT
 
-  return (
-    Object.keys(err).length === 0
-  );
+    setError(err);
+
+    return Object.keys(err).length === 0;
 };
 
     const handleSubmit = async () => {
         if (!validate()) return;
+        console.log("first")
         console.log("submitted");
-        
+
         console.log({
             ...form,
             pdf: file,
             link: url,
         });
-        
+
         const formData = new FormData();
         formData.append("title", form.title);
         formData.append("author", form.author);
@@ -211,41 +222,89 @@ const validate = () => {
                         ))}
                     </TextField>
                 </Box>
-                <Box sx={{ mt: 2 }}>
+                <Box
+                    sx={{
+                        mt: 2,
+                        p: 2,
+                        border: "2px dashed #ccc",
+                        borderRadius: 3,
+                        textAlign: "center",
+                        backgroundColor: "#fafafa",
+                        transition: "0.2s",
 
-                    <Typography mb={1}>
+                        "&:hover": {
+                            borderColor: "#1976d2",
+                            backgroundColor: "#f5f9ff",
+                        },
+                    }}
+                >
+
+                    <ImageIcon sx={{ fontSize: 40, color: "#888" }} />
+
+                    <Typography sx={{ mt: 1, fontWeight: 500 }}>
                         Upload Book Image
                     </Typography>
 
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) =>
-                            setImage(e.target.files[0])
-                        }
-                    />
+                    <Typography sx={{ fontSize: 13, color: "#777", mb: 2 }}>
+                        JPG, PNG or WEBP
+                    </Typography>
 
-                    {/* Existing uploaded filename */}
-                    {!image && book?.image && (
+                    <Button
+                        variant="contained"
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                        sx={{
+                            textTransform: "none",
+                            borderRadius: 2,
+                        }}
+                    >
+                        Choose File
+
+                        <input
+                            hidden
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setImage(e.target.files[0])}
+                        />
+                    </Button>
+
+                    {/* NEW SELECTED FILE */}
+                    {image && (
                         <Typography
-                            variant="body2"
-                            sx={{ mt: 1 }}
+                            sx={{
+                                mt: 2,
+                                fontSize: 14,
+                                fontWeight: 500,
+                                color: "#333",
+                            }}
                         >
-                            Current File:
-                            {" "}
-                            {book.image.split("/").pop()}
+                            Selected: {image.name}
                         </Typography>
                     )}
 
-                    {/* Newly selected filename */}
-                    {image && (
+                    {/* CURRENT IMAGE (if no new file selected) */}
+                    {!image && book?.image && (
+                        <Box sx={{ mt: 2 }}>
+                            <Typography
+                                sx={{
+                                    fontSize: 13,
+                                    color: "#777",
+                                    mb: 1,
+                                }}
+                            >
+                                Current Image: {book.image.split("/").pop()}
+                            </Typography>
+
+                        </Box>
+                    )}
+
+                    {error.image && (
                         <Typography
+                            color="error"
                             variant="body2"
                             sx={{ mt: 1 }}
                         >
-                            Selected File:
-                            {" "}
-                            {image.name}
+                            {error.image}
                         </Typography>
                     )}
 
@@ -259,41 +318,86 @@ const validate = () => {
 
                 {/* PDF */}
                 {tab === 0 && (
-                    <Box sx={{ mt: 2 }}>
+                    <Box
+                        sx={{
+                            mt: 2,
+                            p: 2,
+                            border: "2px dashed #ccc",
+                            borderRadius: 3,
+                            textAlign: "center",
+                            backgroundColor: "#fafafa",
+                            transition: "0.2s",
 
-                        <Typography mb={1}>
-                            Upload PDF
+                            "&:hover": {
+                                borderColor: "#1976d2",
+                                backgroundColor: "#f5f9ff",
+                            },
+                        }}
+                    >
+
+                        <DescriptionIcon sx={{ fontSize: 40, color: "#888" }} />
+
+                        <Typography sx={{ mt: 1, fontWeight: 500 }}>
+                            Upload PDF File
                         </Typography>
 
-                        <input
-                            type="file"
-                            accept="application/pdf"
-                            onChange={(e) =>
-                                setFile(e.target.files[0])
-                            }
-                        />
+                        <Typography sx={{ fontSize: 13, color: "#777", mb: 2 }}>
+                            PDF only (recommended max 10MB)
+                        </Typography>
 
-                        {/* Existing uploaded pdf */}
-                        {!file && book?.pdf && (
+                        <Button
+                            variant="contained"
+                            component="label"
+                            startIcon={<CloudUploadIcon />}
+                            sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                            }}
+                        >
+                            Choose File
+
+                            <input
+                                hidden
+                                type="file"
+                                accept="application/pdf"
+                                onChange={(e) => setFile(e.target.files[0])}
+                            />
+                        </Button>
+
+                        {/* NEW FILE */}
+                        {file && (
                             <Typography
-                                variant="body2"
-                                sx={{ mt: 1 }}
+                                sx={{
+                                    mt: 2,
+                                    fontSize: 14,
+                                    fontWeight: 500,
+                                    color: "#333",
+                                }}
                             >
-                                Current PDF:
-                                {" "}
-                                {book.pdf.split("/").pop()}
+                                Selected: {file.name}
                             </Typography>
                         )}
 
-                        {/* Newly selected pdf */}
-                        {file && (
+                         {/* Error */}
+                                    {error.file && (
+                                      <Typography
+                                        color="error"
+                                        sx={{ mt: 1 }}
+                                      >
+                                        {error.file}
+                                      </Typography>
+                                    )}
+
+                        {/* EXISTING FILE */}
+                        {!file && book?.pdf && (
                             <Typography
-                                variant="body2"
-                                sx={{ mt: 1 }}
+                                sx={{
+                                    mt: 2,
+                                    fontSize: 13,
+                                    color: "#777",
+                                }}
                             >
-                                Selected PDF:
-                                {" "}
-                                {file.name}
+                                Current: {book.pdf.split("/").pop()}
                             </Typography>
                         )}
 

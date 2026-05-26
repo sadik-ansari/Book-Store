@@ -8,7 +8,9 @@ import {
   CardMedia,
   Button,
 } from "@mui/material";
-import { getBookById } from "./BookApi";
+import { IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { getBookById } from "./api/BookApi";
 import UpdateBookData from "./UpdateBookData";
 
 function ViewBook({ open, handleClose, bookId, setBooks }) {
@@ -45,26 +47,88 @@ function ViewBook({ open, handleClose, bookId, setBooks }) {
     <Dialog
       open={open}
       onClose={handleClose}
-      maxWidth="md"
+      maxWidth="lg"
       fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 4,
+          p: {
+            xs: 1,
+            sm: 2,
+          },
+          backgroundColor: "#fafafa",
+        },
+      }}
     >
+
+      {/* HEADER */}
       <DialogTitle
         sx={{
+          position: "relative",
           display: "flex",
+          flexDirection: {
+            xs: "column",
+            sm: "row",
+          },
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: {
+            xs: "flex-start",
+            sm: "center",
+          },
+          gap: 2,
+          pb: 1,
+          width: "95%",
         }}
       >
-        {book.title}
+
+        <Typography
+          sx={{
+            fontSize: {
+              xs: "1.5rem",
+              sm: "2rem",
+            },
+            fontWeight: 700,
+            lineHeight: 1.2,
+            pr: 5,
+          }}
+        >
+          {book.title}
+        </Typography>
 
         <Button
           variant="contained"
           onClick={() => setOpenEdit(true)}
+          sx={{
+            borderRadius: 2,
+            textTransform: "none",
+            px: 3,
+            fontWeight: 500,
+          }}
         >
-          Edit
+          Edit Book
         </Button>
+
+
       </DialogTitle>
 
+      {/* CLOSE BUTTON */}
+      <IconButton
+        onClick={handleClose}
+        sx={{
+          position: "absolute",
+          right: 20,
+          top: 18,
+          color: "#666",
+
+          "&:hover": {
+            backgroundColor: "#f3f3f3",
+          },
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
+
+      {/* EDIT MODAL */}
       <UpdateBookData
         open={openEdit}
         handleClose={() => setOpenEdit(false)}
@@ -79,99 +143,171 @@ function ViewBook({ open, handleClose, bookId, setBooks }) {
         <Box
           sx={{
             display: "flex",
-            gap: 4,
-            mb: 4,
-            flexWrap: "wrap",
+            flexDirection: {
+              xs: "column-reverse",
+              md: "row",
+            },
+            gap: 5,
+            mt: 2,
+            mb: 5,
           }}
         >
 
-          {/* LEFT SIDE */}
-          <Box sx={{ flex: 1, minWidth: "250px" }}>
-
-            <Typography variant="h6" gutterBottom>
-              Book Details
-            </Typography>
-
-            <Typography>
-              <strong>Author:</strong> {book.author}
-            </Typography>
-
-            <Typography>
-              <strong>Genre:</strong> {book.genre}
-            </Typography>
-
-            <Typography>
-              <strong>Publication Year:</strong>{" "}
-              {book.publicationYear}
-            </Typography>
-
-            {book.link && (
-              <Typography sx={{ mt: 2 }}>
-                <strong>External Link:</strong>
-
-                <a
-                  href={book.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ marginLeft: "8px" }}
-                >
-                  Open Link
-                </a>
-              </Typography>
-            )}
-
-          </Box>
-
-          {/* RIGHT SIDE */}
+          {/* LEFT DETAILS */}
           <Box
             sx={{
-              width: "250px",
-              display: "flex",
-              justifyContent: "center",
+              flex: 1,
             }}
           >
 
-            <img
-              src={`http://localhost:5000${book.image}`}
-              alt={book.title}
-              style={{
-                width: "100%",
-                maxHeight: "350px",
-                objectFit: "cover",
-                borderRadius: "12px",
+            <Typography
+              sx={{
+                fontSize: "1.2rem",
+                fontWeight: 600,
+                mb: 3,
               }}
-            />
+            >
+              Book Details
+            </Typography>
+
+            {/* Detail Card */}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                p: 3,
+                borderRadius: 3,
+                backgroundColor: "#fff",
+                border: "1px solid #eee",
+                boxShadow:
+                  "0 2px 20px rgba(0,0,0,0.04)",
+              }}
+            >
+
+              <Typography>
+                <strong>Author:</strong>{" "}
+                {book.author}
+              </Typography>
+
+              <Typography>
+                <strong>Genre:</strong>{" "}
+                {book.genre}
+              </Typography>
+
+              <Typography>
+                <strong>Publication Year:</strong>{" "}
+                {book.publicationYear}
+              </Typography>
+
+              {book.link && (
+                <Typography>
+
+                  <strong>
+                    External Link:
+                  </strong>
+
+                  <a
+                    href={book.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      marginLeft: 8,
+                      color: "#1976d2",
+                      textDecoration: "none",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Open Link
+                  </a>
+
+                </Typography>
+              )}
+
+            </Box>
 
           </Box>
+
+          {/* RIGHT IMAGE */}
+         <Box
+  sx={{
+    width: {
+      xs: "100%",
+      md: 300,
+    },
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-start",
+  }}
+>
+  <Box
+    sx={{
+      width: "100%",
+      height: 380,
+      borderRadius: 4,
+      overflow: "hidden",
+      boxShadow: "0 4px 30px rgba(0,0,0,0.05)",
+      backgroundColor: "#f5f5f5",
+    }}
+  >
+    <img
+      src={`http://localhost:5000${book.image}`}
+      alt={book.title}
+      style={{
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        display: "block",
+      }}
+    />
+  </Box>
+</Box>
 
         </Box>
 
         {/* PDF SECTION */}
         {book.pdf && (
+
           <Box>
 
             <Typography
-              variant="h6"
-              gutterBottom
+              sx={{
+                fontSize: "1.2rem",
+                fontWeight: 600,
+                mb: 2,
+              }}
             >
               PDF Preview
             </Typography>
 
-            <iframe
-              src={`http://localhost:5000${book.pdf}`}
-              width="100%"
-              height="500px"
-              style={{
-                border: "1px solid #ccc",
-                borderRadius: "8px",
+            <Box
+              sx={{
+                overflow: "hidden",
+                borderRadius: 3,
+                border: "1px solid #e0e0e0",
+                boxShadow:
+                  "0 2px 20px rgba(0,0,0,0.04)",
+                backgroundColor: "#fff",
               }}
-              title="Book PDF"
-            />
+            >
+
+              <iframe
+                src={`http://localhost:5000${book.pdf}`}
+                width="100%"
+                height="800px"
+                style={{
+                  border: "none",
+                }}
+                title="Book PDF"
+              />
+
+            </Box>
 
           </Box>
         )}
 
       </DialogContent>
+
     </Dialog>
   );
 }

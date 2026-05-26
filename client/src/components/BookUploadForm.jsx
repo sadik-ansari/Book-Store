@@ -11,9 +11,12 @@ import {
   Tab,
   Typography,
 } from "@mui/material";
-import { createBook } from "./BookApi";
+import { createBook } from "./api/BookApi";
+import ImageIcon from "@mui/icons-material/Image";
+import DescriptionIcon from "@mui/icons-material/Description";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
-const GENRES = ["Fiction", "Non-Fiction", "Self-Help", "Science"];
+const GENRES = ["Fiction", "Non-Fiction", "Self-Help", "Science", "Biography", "History", "Fantasy", "Mystery", "Romance", "Thriller", "Young Adult", "Children's"];
 
 const YEARS = Array.from(
   { length: 30 },
@@ -44,9 +47,26 @@ function BookUploadForm({ open, setBooks, handleClose }) {
     if (!form.author) err.author = "Required";
     if (!form.genre) err.genre = "Required";
     if (!form.publicationYear) err.publicationYear = "Required";
+    if (image) {
+      if (image.size > 2 * 1024 * 1024) {
+        err.image = "Image must be less than 2MB";
+      }
+    }
 
-    if (tab === 0 && !file) err.file = "Upload PDF required";
-    if (tab === 1 && !url) err.url = "URL required";
+    // PDF tab validation
+    if (tab === 0) {
+      if (!file) {
+        err.file = "Upload PDF required";
+      } else if (file.size > 25 * 1024 * 1024) {
+        err.file = "PDF must be less than 25MB";
+      }
+    }
+
+    // URL tab validation
+    if (tab === 1 && !url) {
+      err.url = "URL required";
+    }
+
 
     setError(err);
     return Object.keys(err).length === 0;
@@ -168,19 +188,79 @@ function BookUploadForm({ open, setBooks, handleClose }) {
 
         </Box>
 
-        <Box sx={{ mt: 2 }}>
+        <Box
+          sx={{
+            mt: 2,
+            p: 2,
+            border: "2px dashed #ccc",
+            borderRadius: 3,
+            textAlign: "center",
+            backgroundColor: "#fafafa",
+            transition: "0.2s",
 
-          <Typography>
+            "&:hover": {
+              borderColor: "#1976d2",
+              backgroundColor: "#f5f9ff",
+            },
+          }}
+        >
+
+          <ImageIcon sx={{ fontSize: 40, color: "#888" }} />
+
+          <Typography sx={{ mt: 1, fontWeight: 500 }}>
             Upload Book Image
           </Typography>
 
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) =>
-              setImage(e.target.files[0])
-            }
-          />
+          <Typography sx={{ fontSize: 13, color: "#777", mb: 2 }}>
+            JPG, PNG or WEBP (max 5MB)
+          </Typography>
+
+          <Button
+            variant="contained"
+            component="label"
+            startIcon={<CloudUploadIcon />}
+            sx={{
+              textTransform: "none",
+              borderRadius: 2,
+            }}
+          >
+
+            Choose File
+
+            <input
+              hidden
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImage(e.target.files[0])}
+            />
+
+          </Button>
+
+          {image && (
+            <Typography
+              sx={{
+                mt: 2,
+                fontSize: 14,
+                color: "#333",
+                fontWeight: 500,
+              }}
+            >
+              Selected: {image.name}
+            </Typography>
+          )}
+
+          {error.image && (
+            <Typography
+              sx={{
+                mt: 2,
+                fontSize: 14,
+                color: "red",
+                fontWeight: 500,
+              }}
+            >
+              {error.image}
+            </Typography>
+          )}
 
         </Box>
 
@@ -192,14 +272,78 @@ function BookUploadForm({ open, setBooks, handleClose }) {
 
         {/* PDF */}
         {tab === 0 && (
-          <Box sx={{ mt: 2 }}>
-            <input
-              type="file"
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-            {error.file && (
-              <Typography color="error">{error.file}</Typography>
+          <Box
+            sx={{
+              mt: 2,
+              p: 2,
+              border: "2px dashed #ccc",
+              borderRadius: 3,
+              textAlign: "center",
+              backgroundColor: "#fafafa",
+              transition: "0.2s",
+
+              "&:hover": {
+                borderColor: "#1976d2",
+                backgroundColor: "#f5f9ff",
+              },
+            }}
+          >
+
+            <DescriptionIcon sx={{ fontSize: 40, color: "#888" }} />
+
+            <Typography sx={{ mt: 1, fontWeight: 500 }}>
+              Upload PDF File
+            </Typography>
+
+            <Typography sx={{ fontSize: 13, color: "#777", mb: 2 }}>
+              PDF only (max 10MB)
+            </Typography>
+
+            <Button
+              variant="contained"
+              component="label"
+              startIcon={<CloudUploadIcon />}
+              sx={{
+                textTransform: "none",
+                borderRadius: 2,
+              }}
+            >
+
+              Choose File
+
+              <input
+                hidden
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+
+            </Button>
+
+            {/* File name preview */}
+            {file && (
+              <Typography
+                sx={{
+                  mt: 2,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: "#333",
+                }}
+              >
+                Selected: {file.name}
+              </Typography>
             )}
+
+            {/* Error */}
+            {error.file && (
+              <Typography
+                color="error"
+                sx={{ mt: 1 }}
+              >
+                {error.file}
+              </Typography>
+            )}
+
           </Box>
         )}
 
