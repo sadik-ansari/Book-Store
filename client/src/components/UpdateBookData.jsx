@@ -84,8 +84,8 @@ function UpdateBookData({ open, handleClose, book, setBook, setBooks }) {
                 err.file = "Upload PDF required";
             }
 
-            if (file && file.size > 25 * 1024 * 1024) {
-                err.file = "PDF must be less than 25MB";
+            if (file && file.size > 10 * 1024 * 1024) {
+                err.file = "PDF must be less than 10MB";
             }
         }
 
@@ -100,8 +100,6 @@ function UpdateBookData({ open, handleClose, book, setBook, setBooks }) {
             }
         }
 
-        console.log("VALIDATION ERRORS:", err); // 🔥 IMPORTANT
-
         setError(err);
 
         return Object.keys(err).length === 0;
@@ -109,14 +107,6 @@ function UpdateBookData({ open, handleClose, book, setBook, setBooks }) {
 
     const handleSubmit = async () => {
         if (!validate()) return;
-        console.log("first")
-        console.log("submitted");
-
-        console.log({
-            ...form,
-            pdf: file,
-            link: url,
-        });
 
         const formData = new FormData();
         formData.append("title", form.title);

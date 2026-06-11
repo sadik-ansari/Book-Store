@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = `${import.meta.env.VITE_API_URL}/api/books`;
+const BASE_URL = `http://localhost:5000/api/books`;
 
 // Helper function for error handling
 const handleError = (error) => {
@@ -57,7 +57,6 @@ export const getBookById = async (id) => {
 // CREATE book
 export const createBook = async (bookData) => {
   try {
-    console.log("Creating book with data:", bookData);
     const res = await axios.post(BASE_URL, bookData);
 
     return {
@@ -72,10 +71,7 @@ export const createBook = async (bookData) => {
 
 // UPDATE book
 export const updateBook = async (id, updatedData) => {
-  console.log("Updating book with ID:", id);
-  for (let pair of updatedData.entries()) {
-    console.log(pair[0], pair[1]);
-  }
+ 
   try {
     const res = await axios.put(`${BASE_URL}/${id}`, updatedData);
 

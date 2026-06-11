@@ -3,7 +3,6 @@ const Book = require("../models/Book");
 // CREATE Book
 const createBook = async (req, res) => {
   try {
-    console.log("creating")
     let pdfPath = "";
     let imagePath = "";
 
@@ -29,8 +28,6 @@ const createBook = async (req, res) => {
       pdf: pdfPath,
       image: imagePath,
     };
-
-    console.log(bookData)
 
     const book = await Book.create(bookData);
 

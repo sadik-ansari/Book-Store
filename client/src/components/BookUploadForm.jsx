@@ -59,8 +59,8 @@ function BookUploadForm({ open, setBooks, handleClose }) {
     if (tab === 0) {
       if (!file) {
         err.file = "Upload PDF required";
-      } else if (file.size > 25 * 1024 * 1024) {
-        err.file = "PDF must be less than 25MB";
+      } else if (file.size > 10 * 1024 * 1024) {
+        err.file = "PDF must be less than 10MB";
       }
     }
 
@@ -76,12 +76,6 @@ function BookUploadForm({ open, setBooks, handleClose }) {
 
   const handleSubmit = async () => {
     if (!validate()) return;
-
-    console.log({
-      ...form,
-      pdf: file,
-      link: url,
-    });
 
     const formData = new FormData();
     formData.append("title", form.title);
@@ -102,7 +96,6 @@ function BookUploadForm({ open, setBooks, handleClose }) {
     }
 
     setLoading(true);
-    console.log(formData);
     const res = await createBook(formData);
 
     //here i wanna add this new book in the book list without reffresh the page
@@ -218,7 +211,7 @@ function BookUploadForm({ open, setBooks, handleClose }) {
           </Typography>
 
           <Typography sx={{ fontSize: 13, color: "#777", mb: 2 }}>
-            JPG, PNG or WEBP (max 5MB)
+            JPG, PNG or WEBP (max 2MB)
           </Typography>
 
           <Button

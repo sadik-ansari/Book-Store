@@ -23,7 +23,6 @@ function ViewBook({ open, handleClose, bookId, setBooks }) {
 
     const fetchBook = async () => {
       const res = await getBookById(bookId);
-      console.log(res.data)
       if (res.success) {
         setBook(res.data);
       }
@@ -208,7 +207,7 @@ function ViewBook({ open, handleClose, bookId, setBooks }) {
                   </strong>
 
                   <a
-                    href={book.pdf}
+                    href={book.link}
                     target="_blank"
                     rel="noreferrer"
                     style={{

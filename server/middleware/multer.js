@@ -13,7 +13,6 @@ const storage = new CloudinaryStorage({
         ) {
             return {
                 folder: "books/pdfs",
-                resource_type: "raw",
                 public_id: Date.now() + "-" + fileNameWithoutExt,
             };
         }
@@ -35,7 +34,6 @@ const fileFilter = (
     file,
     cb
 ) => {
-
     // pdf validation
     if (file.fieldname === "pdf") {
 
