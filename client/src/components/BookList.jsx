@@ -36,7 +36,7 @@ function BookList() {
       const res = await getBooks();
       if (res.success) {
         setBooks(res.data);
-        console.log("Fetched books:", res.data);
+        // console.log("Fetched books:", res.data);
       }
 
       setLoading(false);

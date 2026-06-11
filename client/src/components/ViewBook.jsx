@@ -293,7 +293,7 @@ function ViewBook({ open, handleClose, bookId, setBooks }) {
 
            
              <iframe
-                src={`${import.meta.env.VITE_API_URL}${book.pdf}`}
+                src={book.pdf}
                 width="100%"
                 height="800px"
                 style={{
