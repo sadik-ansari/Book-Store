@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = `http://localhost:5000/api/books`;
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/books`;
 
 // Helper function for error handling
 const handleError = (error) => {
