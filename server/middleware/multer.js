@@ -5,18 +5,16 @@ const cloudinary = require("../config/cloudinary");
 const storage = new CloudinaryStorage({
     cloudinary,
     params: async (req, file) => {
-        console.log("file", file);
+        const fileNameWithoutExt =
+            file.originalname.replace(/\.[^/.]+$/, "");
 
         if (
             file.mimetype === "application/pdf"
         ) {
-            return { 
+            return {
                 folder: "books/pdfs",
                 resource_type: "raw",
-                public_id:
-                    Date.now() +
-                    "-" +
-                    file.originalname,
+                public_id: Date.now() + "-" + fileNameWithoutExt,
             };
         }
 
