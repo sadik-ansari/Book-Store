@@ -3,20 +3,20 @@ const Book = require("../models/Book");
 // CREATE Book
 const createBook = async (req, res) => {
   try {
-
+    console.log("creating")
     let pdfPath = "";
     let imagePath = "";
 
     // PDF upload
     if (req.files?.pdf) {
       pdfPath =
-        `/uploads/${req.files.pdf[0].filename}`;
+        req.files.pdf[0].path;
     }
 
     // Image upload
     if (req.files?.image) {
       imagePath =
-        `/uploads/${req.files.image[0].filename}`;
+        req.files.image[0].path;
     }
 
     const bookData = {
@@ -30,7 +30,7 @@ const createBook = async (req, res) => {
       image: imagePath,
     };
 
-    console.log(bookData);
+    console.log(bookData)
 
     const book = await Book.create(bookData);
 
@@ -40,15 +40,15 @@ const createBook = async (req, res) => {
     });
 
   } catch (error) {
+  console.error("CREATE BOOK ERROR:");
+  console.error(error);
 
-    console.log(error);
-
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
-
-  }
+  res.status(500).json({
+    success: false,
+    message: error.message,
+    stack: error.stack,
+  });
+}
 };
 
 // GET all Books
@@ -108,13 +108,13 @@ const updateBook = async (req, res) => {
     // update pdf if uploaded
     if (req.files?.pdf) {
       updatedData.pdf =
-        `/uploads/${req.files.pdf[0].filename}`;
+        req.files.pdf[0].path;
     }
 
     // update image if uploaded
     if (req.files?.image) {
       updatedData.image =
-        `/uploads/${req.files.image[0].filename}`;
+        req.files.image[0].path;
     }
 
     const updatedBook =

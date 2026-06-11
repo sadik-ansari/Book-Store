@@ -1,34 +1,33 @@
 const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary");
 
-const uploadPath = path.join(
-    __dirname,
-    "../uploads"
-);
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: async (req, file) => {
+        console.log("file", file);
 
-// create uploads folder if missing
-if (!fs.existsSync(uploadPath)) {
-    fs.mkdirSync(uploadPath, {
-        recursive: true,
-    });
-}
+        if (
+            file.mimetype === "application/pdf"
+        ) {
+            return { 
+                folder: "books/pdfs",
+                resource_type: "raw",
+                public_id:
+                    Date.now() +
+                    "-" +
+                    file.originalname,
+            };
+        }
 
-const storage = multer.diskStorage({
-
-    destination: (req, file, cb) => {
-        cb(null, uploadPath);
-    },
-
-    filename: (req, file, cb) => {
-
-        const safeName =
-            file.originalname.replace(/\s+/g, "-");
-
-        cb(
-            null,
-            Date.now() + "-" + safeName
-        );
+        return {
+            folder: "books/images",
+            resource_type: "image",
+            public_id:
+                Date.now() +
+                "-" +
+                file.originalname,
+        };
     },
 });
 

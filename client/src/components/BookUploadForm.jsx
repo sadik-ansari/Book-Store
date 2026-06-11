@@ -102,10 +102,12 @@ function BookUploadForm({ open, setBooks, handleClose }) {
     }
 
     setLoading(true);
+    console.log(formData);
     const res = await createBook(formData);
 
     //here i wanna add this new book in the book list without reffresh the page
     if (res.success) {
+      
       setBooks((prev) => [...prev, res.data]);
     }
 

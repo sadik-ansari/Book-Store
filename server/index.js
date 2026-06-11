@@ -20,7 +20,7 @@ connectDB();
 const bookRoutes = require("./routes/bookRoutes");
 app.use("/api/books", bookRoutes);
 
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {
   res.send("Book Server Running");

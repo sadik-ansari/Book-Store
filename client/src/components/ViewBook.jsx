@@ -208,7 +208,7 @@ function ViewBook({ open, handleClose, bookId, setBooks }) {
                   </strong>
 
                   <a
-                    href={book.link}
+                    href={book.pdf}
                     target="_blank"
                     rel="noreferrer"
                     style={{
@@ -251,7 +251,7 @@ function ViewBook({ open, handleClose, bookId, setBooks }) {
     }}
   >
     <img
-      src={`${import.meta.env.VITE_API_URL}${book.image}`}
+      src={book.image}
       alt={book.title}
       style={{
         width: "100%",
@@ -291,7 +291,8 @@ function ViewBook({ open, handleClose, bookId, setBooks }) {
               }}
             >
 
-              <iframe
+           
+             <iframe
                 src={`${import.meta.env.VITE_API_URL}${book.pdf}`}
                 width="100%"
                 height="800px"
