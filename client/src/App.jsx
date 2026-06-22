@@ -3,6 +3,7 @@ import './App.css'
 import BookForm from './components/BookUploadForm'
 import BookUploadForm from './components/BookUploadForm'
 import BookList from './components/BookList'
+import BookStoreLandingPage from './components/BookStoreLandingPage'
 
 function App() {
 
