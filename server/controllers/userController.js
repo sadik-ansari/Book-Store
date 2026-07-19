@@ -22,16 +22,20 @@ const handleCreateNewUser = async (req, res) => {
             const token = await createUserToken(user._id)
             return res.status(200).json({ message: "user created successfully", user: user, token })
         }
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal server error" })
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            error: err.message
+        });
     }
 }
 
 const handleLoginUser = async (req, res) => {
     try {
         const { email, password } = req.body
+        console.log(req.body);
         const user = await User.findOne({ email })
-
+        console.log(user);
         if (!user) {
             return res.status(404).json({
                 message: "User not found"
@@ -39,6 +43,7 @@ const handleLoginUser = async (req, res) => {
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password)
+        console.log(isPasswordValid);
         if (!isPasswordValid) {
             return res.status(401).json({
                 message: "Invalid password"
@@ -50,8 +55,11 @@ const handleLoginUser = async (req, res) => {
         return res.status(200).json({ message: "user founded successfully", user: user, token })
 
 
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal server error" })
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            error: err.message
+        });
     }
 }
 
@@ -59,7 +67,7 @@ const handleGuestoLogin = async (req, res) => {
     try {
         const guest = await User.findOne({
             email: "guest@gmail.com",
-        }); 
+        });
 
         if (!guest) {
             return res.status(404).json({
@@ -73,13 +81,16 @@ const handleGuestoLogin = async (req, res) => {
                 message: "Invalid password"
             });
         }
-        const token = await createUserToken(guest._id) 
+        const token = await createUserToken(guest._id)
 
         return res.status(200).json({ message: "user founded successfully", user: guest, token })
 
 
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal server error" })
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            error: err.message
+        });
     }
 }
 
