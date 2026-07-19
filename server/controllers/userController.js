@@ -38,15 +38,16 @@ const handleLoginUser = async (req, res) => {
 
         if (!user) {
             return res.status(404).json({
-                message: "User not found"
+                message: "User not found, check your email or create a new account"
             });
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password)
-        
+
         if (!isPasswordValid) {
             return res.status(401).json({
-                message: "Invalid password"
+                message: "Invalid password",
+                passwordMatch: isPasswordValid
             });
         }
 
