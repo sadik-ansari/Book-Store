@@ -474,7 +474,8 @@ export default function LandingPage() {
               navigate('/books')
             }
           } catch (error) {
-            console.log(error.message)
+            console.log(error.response)
+            return error.response?.data || "An error occurred during login.";
           }
         }}
         onRegister={async (values) => {

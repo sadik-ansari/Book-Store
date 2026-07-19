@@ -94,7 +94,14 @@ export default function AuthModal({
         setSubmitting(true);
         try {
             if (isLogin) {
-                await onLogin?.({ email: values.email, password: values.password });
+                const res = await onLogin?.({ email: values.email, password: values.password });
+                console.log(res)
+                const next = {}
+                if(res.passwordMatch === false) {
+                    next.password = res.message
+                }
+                next.email = res
+                setErrors(next)
             } else {
                 await onRegister?.(values);
             }
