@@ -8,7 +8,7 @@ const handleCreateNewUser = async (req, res) => {
 
         const existingUser = await User.findOne({ email })
         if (existingUser) {
-            return res.json({ success: false, message: "user already exist", existingUser: true })
+            return res.json({ success: false, message: "email already exist", existingUser: true })
         }
         const hashedPassword = await bcrypt.hash(password, 10)
 
