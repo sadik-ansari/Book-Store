@@ -1,93 +1,158 @@
-# Book Management System
+# 📚 Book Management System
 
-A full-stack Book Management System built using React.js, Material UI, Node.js, Express.js, and MongoDB.
+A full-stack Book Management System built with **React.js**, **Material UI**, **Node.js**, **Express.js**, and **MongoDB**.
 
-This project was developed as part of a frontend evaluation assignment, but was extended with a custom backend API, file upload handling, and complete CRUD functionality to demonstrate full-stack development skills and scalable application structure.
+The project started as a frontend evaluation assignment and was later expanded into a complete full-stack application with secure authentication, user-specific book management, Cloudinary file storage, JWT authorization, and a scalable REST API.
 
 ---
 
-## Features
+# 🚀 Live Demo
 
-### Book Management
-- View all books
+**Frontend:** https://book-store-client-z5b0.onrender.com
+
+**Backend API:** https://book-store-iyri.onrender.com
+
+---
+
+# ✨ Features
+
+## 📖 Book Management
+
 - Add new books
-- Update existing books
+- View your own books
+- Update book details
 - Delete books
+- Upload book cover images
+- Upload PDF books
+- Preview uploaded files
 
-### Search & Filtering
+---
+
+## 🔐 Authentication & Authorization
+
+- User Registration
+- User Login
+- Guest Login
+- JWT Authentication
+- Protected Routes
+- Password hashing using bcrypt
+- Token verification middleware
+- Automatic logout after token expiration
+- Each user can only access their own books
+
+---
+
+## 🔍 Search & Filtering
+
 - Search books by title
 - Search books by author
 - Filter books by genre
 
-### File Upload Support
-- Upload book PDF files
-- Upload book cover images
-- Preview uploaded content
+---
 
-### UI Features
-- Responsive Material UI design
-- Modal-based forms
-- Loading & error handling
-- Consistent edit/create workflows
+## ☁️ Cloud Storage
 
-### Backend Features
-- REST API with Express.js
-- MongoDB database integration
-- Multer-based file uploads
-- Validation handling
-- Static file serving
+Instead of storing files locally, all uploaded files are stored securely using **Cloudinary**.
+
+Supported uploads:
+
+- Book Cover Images
+- PDF Books
 
 ---
 
-## Tech Stack
+## 🎨 User Interface
 
-### Frontend
-- React.js
-- Material UI (MUI)
+- Fully responsive Material UI design
+- Modern Landing Page
+- Modal-based Authentication
+- Upload progress indicator
+- Loading states
+- Error handling
+- Empty state UI
+
+---
+
+## ⚙️ Backend Features
+
+- RESTful API
+- MongoDB with Mongoose
+- JWT Authentication
+- Authentication Middleware
+- Password Encryption (bcrypt)
+- Cloudinary Integration
+- Multer for multipart form parsing
+- Request Validation
+- User-specific CRUD operations
+
+---
+
+## 📊 Additional Features
+
+- Guest Mode
+- Website Visit Counter
+- Token Expiration Handling
+- Protected API Routes
+- Responsive Design
+- File Upload Progress
+- Persistent Database Storage
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+
+- React 19
+- Material UI
 - Axios
+- React Router
 
-### Backend
+## Backend
+
 - Node.js
 - Express.js
 - MongoDB
 - Mongoose
+- JWT
+- bcrypt
 - Multer
+- Cloudinary
 
 ---
 
-## Project Structure
+# 📂 Project Structure
 
-```bash
+```text
 client/
 │
 ├── src/
-│   ├── components/
 │   ├── api/
-│   └── assets/
+│   ├── components/
+│   ├── assets/
 
 server/
 │
+├── config/
 ├── controllers/
+├── middleware/
 ├── models/
 ├── routes/
-├── middleware/
-├── uploads/
-└── config/
 ```
 
 ---
 
-## Installation
+# ⚙️ Installation
 
-### Clone Repository
+## Clone Repository
 
 ```bash
-git clone <https://github.com/sadik-ansari/Book-Store>
+git clone https://github.com/sadik-ansari/Book-Store.git
 ```
 
 ---
 
-## Frontend Setup
+## Frontend
 
 ```bash
 cd client
@@ -95,15 +160,15 @@ npm install
 npm run dev
 ```
 
-Frontend runs on:
+Runs on
 
-```bash
+```
 http://localhost:5173
 ```
 
 ---
 
-## Backend Setup
+## Backend
 
 ```bash
 cd server
@@ -111,78 +176,120 @@ npm install
 npm run dev
 ```
 
-Backend runs on:
+Runs on
 
-```bash
+```
 http://localhost:5000
 ```
 
 ---
 
-## Environment Variables
+# 🔑 Environment Variables
 
-Create a `.env` file inside the `Books` directory:
+Create a `.env` file inside the **server** folder.
 
 ```env
 PORT=5000
-MONGO_URI=mongodb_connection_string
+
+MONGO_URI=your_mongodb_connection_string
+
+SECRET=_jwt_secret
+
+CLOUDINARY_CLOUD_NAME=_cloud_name
+
+CLOUDINARY_API_KEY=_api_key
+
+CLOUDINARY_API_SECRET=_api_secret
 ```
 
 ---
 
-## API Endpoints
+# 📡 API Endpoints
+
+## Authentication
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | /api/books | Get all books |
-| GET | /api/books/:id | Get single book |
-| POST | /api/books | Create book |
-| PUT | /api/books/:id | Update book |
-| DELETE | /api/books/:id | Delete book |
+|---------|----------|-------------|
+| POST | /api | Register User |
+| POST | /api/user | Login User |
+| POST | /api/user/guest-user | Guest Login |
+| POST | /api/user/verifyToken | Verify JWT Token |
 
 ---
 
-## Learning Outcomes
+## Books
 
-This project helped strengthen understanding of:
-
-- CRUD operations
-- REST API integration
-- React state management
-- File uploads using Multer
-- Form validation
-- Component structuring
-- Full-stack application architecture
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | /api/books | Get Logged-in User Books |
+| GET | /api/books/:id | Get Single Book |
+| POST | /api/books | Create Book |
+| PUT | /api/books/:id | Update Book |
+| DELETE | /api/books/:id | Delete Book |
 
 ---
 
-## Additional Improvements Beyond Assignment
+## Visit Counter
 
-The original assignment focused mainly on frontend development and API integration.
-
-Additional features implemented include:
-
-- Custom backend API development
-- MongoDB database integration
-- PDF upload functionality
-- Image upload functionality
-- File validation handling
-- Persistent data storage
-- Full-stack architecture setup
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | /api/visit | Increase Website Visit Count |
 
 ---
 
-## Future Improvements
+# 🔒 Security
 
-- Authentication & authorization
+- JWT Authentication
+- Password Hashing with bcrypt
+- Protected Backend Routes
+- Token Verification Middleware
+- User-specific Resource Access
+- Secure File Upload Workflow
+
+---
+
+# 📚 What I Learned
+
+This project helped strengthen my understanding of
+
+- React Application Architecture
+- REST API Design
+- MongoDB & Mongoose
+- Authentication & Authorization
+- JWT Token Handling
+- Password Hashing
+- Express Middleware
+- Cloudinary Integration
+- File Upload Handling
+- CRUD Operations
+- Protected Routes
+- Full-stack Application Development
+
+---
+
+# 🚀 Future Improvements
+
+- Refresh Tokens
+- Email Verification
+- Forgot Password
+- User Profile
+- Book Favorites
 - Pagination
-- Cloud file storage (Cloudinary / AWS S3)
-- Advanced search
-- Debounced search input
-- Dark mode support
+- Infinite Scrolling
+- Advanced Search
+- Admin Dashboard
+- AWS S3 Support
+- Docker Deployment
+- Unit & Integration Testing
 
 ---
 
-## Author
+# 👨‍💻 Author
 
-Mohammed Sadik Ansari
+**Mohammed Sadik Ansari**
+
+Frontend Developer
+
+GitHub: https://github.com/sadik-ansari
+
+LinkedIn: https://www.linkedin.com/in/mohammed-sadik-ansari-947091205/
