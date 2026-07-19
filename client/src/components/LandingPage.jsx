@@ -489,6 +489,7 @@ export default function LandingPage() {
             }
           } catch (error) {
             console.log(error.message)
+            return error.response?.data || "An error occurred during registration.";
           }
         }}
       />
