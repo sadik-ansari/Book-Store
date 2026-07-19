@@ -106,7 +106,7 @@ export default function AuthModal({
             } else {
                 const res = await onRegister?.(values);
                 const next = {}
-                if(res.existingUser === true){
+                if (res.existingUser === true) {
                     next.email = res.message
                 }
                 setErrors(next)
@@ -176,19 +176,21 @@ export default function AuthModal({
                             onChange={handleChange('name')}
                             error={Boolean(errors.name)}
                             helperText={errors.name}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <PersonRoundedIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
-                                    </InputAdornment>
-                                ),
+                            slotProps={{
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <PersonRoundedIcon sx={{ color: "text.secondary", fontSize: 20 }} />
+                                        </InputAdornment>
+                                    ),
+                                },
                             }}
                         />
                     )}
 
                     <TextField
+                        label="Email"
                         sx={{
-                            "label": "Email",
                             "type": "email",
                             "autoComplete": "email",
                         }}

@@ -11,6 +11,7 @@ import {
   Tab,
   Typography,
   CircularProgress,
+  LinearProgress,
 } from "@mui/material";
 import { createBook } from "./api/BookApi";
 import ImageIcon from "@mui/icons-material/Image";
@@ -37,6 +38,7 @@ function BookUploadForm({ open, setBooks, handleClose }) {
   const [url, setUrl] = useState("");
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -96,15 +98,19 @@ function BookUploadForm({ open, setBooks, handleClose }) {
     }
 
     setLoading(true);
-    const res = await createBook(formData);
+    setProgress(0);
+
+    const res = await createBook(formData, setProgress);
+
+    setLoading(false);
 
     //here i wanna add this new book in the book list without reffresh the page
     if (res.success) {
-      
       setBooks((prev) => [...prev, res.data]);
     }
 
-    setLoading(false);
+    setProgress(100);
+
     setForm({
       title: "",
       author: "",
@@ -372,10 +378,23 @@ function BookUploadForm({ open, setBooks, handleClose }) {
             disabled={loading}
           >
             {loading ? (
-              <CircularProgress size={22} color="inherit" />
-            ) : (
-              "Submit"
-            )}
+              <Box sx={{ mt: 2 }}>
+                <LinearProgress
+                  variant="determinate"
+                  value={progress}
+                />
+                <Typography
+                  variant="body2"
+                  align="center"
+                  sx={{ mt: 1 }}
+                >
+                  Uploading... {progress}%
+                </Typography>
+              </Box>
+            ) 
+          :
+            "Submit"
+          }
           </Button>
         </Box>
 

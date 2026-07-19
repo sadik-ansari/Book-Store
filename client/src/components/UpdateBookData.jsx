@@ -11,6 +11,7 @@ import {
     Tab,
     Typography,
     CircularProgress,
+    LinearProgress,
 } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ImageIcon from "@mui/icons-material/Image";
@@ -54,6 +55,7 @@ function UpdateBookData({ open, handleClose, book, setBook, setBooks }) {
     const [url, setUrl] = useState("");
     const [error, setError] = useState({});
     const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -127,7 +129,11 @@ function UpdateBookData({ open, handleClose, book, setBook, setBooks }) {
         }
 
         setLoading(true);
-        const res = await updateBook(book._id, formData);
+        setProgress(0);
+
+        const res = await updateBook(book._id, formData, setProgress);
+
+        setLoading(false);
 
         //here i wanna add this new book in the book list without reffresh the page
         if (res.success) {
@@ -143,8 +149,7 @@ function UpdateBookData({ open, handleClose, book, setBook, setBooks }) {
                         : book
                 )
             );
-
-            setLoading(false);
+            setProgress(100);
             handleClose();
         }
     };
@@ -424,10 +429,23 @@ function UpdateBookData({ open, handleClose, book, setBook, setBooks }) {
                         disabled={loading}
                     >
                         {loading ? (
-                            <CircularProgress size={22} color="inherit" />
-                        ) : (
+                            <Box sx={{ mt: 2 }}>
+                                <LinearProgress
+                                    variant="determinate"
+                                    value={progress}
+                                />
+                                <Typography
+                                    variant="body2"
+                                    align="center"
+                                    sx={{ mt: 1 }}
+                                >
+                                    Uploading... {progress}%
+                                </Typography>
+                            </Box>
+                        )
+                            :
                             "Update Book"
-                        )}
+                        }
                     </Button>
                 </Box>
 

@@ -31,6 +31,7 @@ function BookList() {
   const [genreFilter, setGenreFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
   const navigate = useNavigate()
 
 
@@ -89,11 +90,14 @@ function BookList() {
   };
 
   const handleDelete = async (id) => {
+    setDeletingId(id);
     const res = await deleteBook(id);
 
     if (res.success) {
       setBooks((prev) => prev.filter(book => book._id !== id))
     }
+
+    setDeletingId(null);
   };
 
   const handleLogoutUser = async () => {
@@ -229,8 +233,8 @@ function BookList() {
 
           {/* Search */}
           <TextField
-          variant="outlined"
-          color="primary"
+            variant="outlined"
+            color="primary"
             fullWidth
             label="Search by title or author"
             value={search}
@@ -469,6 +473,7 @@ function BookList() {
                     <Button
                       variant="outlined"
                       color="error"
+                      disabled={deletingId === book._id}
                       size="medium"
                       onClick={() =>
                         handleDelete(book._id)
@@ -479,7 +484,11 @@ function BookList() {
                         fontWeight: 500,
                       }}
                     >
-                      Delete
+                      {deletingId === book._id ? (
+                        <CircularProgress size={18} color="inherit" />
+                      ) : (
+                        "Delete"
+                      )}
                     </Button>
 
                   </Box>

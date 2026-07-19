@@ -474,21 +474,23 @@ export default function LandingPage() {
               navigate('/books')
             }
           } catch (error) {
-            console.log(error.response)
+            console.log(error.response.data.message)
             return error.response?.data || "An error occurred during login.";
           }
         }}
         onRegister={async (values) => {
           try {
             const res = await axios.post(`${BASE_URL}/api/`, values)
-
+            if (res.data.success === false && res.data.existingUser) {
+              return res.data
+            }
             if (res.status === 200) {
               sessionStorage.setItem("token", res.data.token)
               setAuthOpen(false);
               navigate('/books')
             }
           } catch (error) {
-            console.log(error.message)
+            console.log(error)
             return error.response?.data || "An error occurred during registration.";
           }
         }}

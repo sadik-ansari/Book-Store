@@ -20,7 +20,7 @@ const handleError = (error) => {
     };
   } else {
     // Other errors
-    return { 
+    return {
       success: false,
       message: error.message,
     };
@@ -66,7 +66,7 @@ export const getBookById = async (id) => {
 };
 
 // CREATE book
-export const createBook = async (bookData) => {
+export const createBook = async (bookData, onProgress) => {
   try {
     const token = sessionStorage.getItem("token");
     const res = await axios.post(BASE_URL, bookData,
@@ -74,6 +74,16 @@ export const createBook = async (bookData) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+
+        onUploadProgress: (progressEvent) => {
+          if (!progressEvent.total) return;
+
+          const percent = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+
+          onProgress?.(percent);
+        }
       }
     );
 
@@ -88,14 +98,23 @@ export const createBook = async (bookData) => {
 };
 
 // UPDATE book
-export const updateBook = async (id, updatedData) => {
- 
+export const updateBook = async (id, updatedData, onProgress) => {
+
   try {
     const token = sessionStorage.getItem("token");
     const res = await axios.put(`${BASE_URL}/${id}`, updatedData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      onUploadProgress: (progressEvent) => {
+        if (!progressEvent.total) return;
+
+        const percent = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+
+        onProgress?.(percent);
+      }
     });
 
     return {
