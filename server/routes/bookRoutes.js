@@ -8,12 +8,13 @@ const {
   updateBook,
   deleteBook,
 } = require("../controllers/bookController");
+const { authMiddleware } = require("../middleware/auth.js");
 
 const router = express.Router();
 
 // CREATE book
 router.post(
-  "/",
+  "/", authMiddleware,
   upload.fields([
     { name: "pdf", maxCount: 1 },
     { name: "image", maxCount: 1 },
@@ -22,18 +23,18 @@ router.post(
 );
 
 // GET all books
-router.get("/", getAllBooks);
+router.get("/", authMiddleware, getAllBooks);
 
 // GET single book
-router.get("/:id", getBookById);
+router.get("/:id", authMiddleware, getBookById);
 
 // UPDATE book
-router.put( "/:id", upload.fields([
+router.put( "/:id", authMiddleware, upload.fields([
     { name: "pdf", maxCount: 1 },
     { name: "image", maxCount: 1 },
   ]), updateBook );
 
 // DELETE book
-router.delete("/:id", deleteBook);
+router.delete("/:id", authMiddleware, deleteBook);
 
 module.exports = router;

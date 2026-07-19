@@ -12,10 +12,17 @@ const createBook = async (req, res) => {
         req.files.pdf[0].path;
     }
 
-    // Image upload
+    // Image upload 
     if (req.files?.image) {
       imagePath =
         req.files.image[0].path;
+    }
+
+    if (!req.user.userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized: User ID not found in request",
+      });
     }
 
     const bookData = {
@@ -27,9 +34,10 @@ const createBook = async (req, res) => {
       link: req.body.link || "",
       pdf: pdfPath,
       image: imagePath,
+      user: req.user.userId
     };
-
     const book = await Book.create(bookData);
+
 
     res.status(201).json({
       success: true,
@@ -37,21 +45,22 @@ const createBook = async (req, res) => {
     });
 
   } catch (error) {
-  console.error("CREATE BOOK ERROR:");
-  console.error(error);
+    console.error(error);
 
-  res.status(500).json({
-    success: false,
-    message: error.message,
-    stack: error.stack,
-  });
-}
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      stack: error.stack,
+    });
+  }
 };
 
 // GET all Books
 const getAllBooks = async (req, res) => {
   try {
-    const books = await Book.find();
+    const books = await Book.find({
+      user: req.user.userId
+    });
 
     res.status(200).json({
       success: true,
@@ -69,7 +78,10 @@ const getAllBooks = async (req, res) => {
 // GET single Book
 const getBookById = async (req, res) => {
   try {
-    const book = await Book.findById(req.params.id);
+    const book = await Book.findOne({
+      _id: req.params.id,
+      user: req.user.userId,
+    });
 
     if (!book) {
       return res.status(404).json({
@@ -142,7 +154,10 @@ const updateBook = async (req, res) => {
 // DELETE Book
 const deleteBook = async (req, res) => {
   try {
-    const book = await Book.findByIdAndDelete(req.params.id);
+    const book = await Book.findOne({
+      _id: req.params.id,
+      user: req.user.userId
+    });
 
     if (!book) {
       return res.status(404).json({
@@ -151,7 +166,9 @@ const deleteBook = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    const deleteResult = await book.deleteOne();
+
+    return res.status(200).json({
       success: true,
       message: "Book deleted successfully",
     });

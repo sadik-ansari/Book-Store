@@ -41,20 +41,16 @@ const bookSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    }
   },
   {
     timestamps: true,
   }
 );
-
-// validation: at least one required
-// bookSchema.pre("validate", function (next) {
-//   if (
-//     (!this.pdf || this.pdf.trim() === "") &&
-//     (!this.link || this.link.trim() === "")
-//   ) {
-//     this.invalidate("pdf", "Either PDF or Link is required");
-//   }
-// });
 
 module.exports = mongoose.model("Book", bookSchema);
