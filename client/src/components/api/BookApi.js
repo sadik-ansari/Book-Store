@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const BASE_URL = `${import.meta.env.VITE_API_URL}/api/books`;
+// const BASE_URL = `http://localhost:5000/api/books`;  
 
 // Helper function for error handling
 const handleError = (error) => {
@@ -19,7 +20,7 @@ const handleError = (error) => {
     };
   } else {
     // Other errors
-    return {
+    return { 
       success: false,
       message: error.message,
     };
@@ -29,7 +30,12 @@ const handleError = (error) => {
 // GET all books
 export const getBooks = async () => {
   try {
-    const res = await axios.get(BASE_URL);
+    const token = sessionStorage.getItem("token");
+    const res = await axios.get(BASE_URL, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return {
       success: true,
@@ -43,7 +49,12 @@ export const getBooks = async () => {
 // GET single book
 export const getBookById = async (id) => {
   try {
-    const res = await axios.get(`${BASE_URL}/${id}`);
+    const token = sessionStorage.getItem("token");
+    const res = await axios.get(`${BASE_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return {
       success: true,
@@ -57,7 +68,14 @@ export const getBookById = async (id) => {
 // CREATE book
 export const createBook = async (bookData) => {
   try {
-    const res = await axios.post(BASE_URL, bookData);
+    const token = sessionStorage.getItem("token");
+    const res = await axios.post(BASE_URL, bookData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     return {
       success: true,
@@ -73,7 +91,12 @@ export const createBook = async (bookData) => {
 export const updateBook = async (id, updatedData) => {
  
   try {
-    const res = await axios.put(`${BASE_URL}/${id}`, updatedData);
+    const token = sessionStorage.getItem("token");
+    const res = await axios.put(`${BASE_URL}/${id}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return {
       success: true,
@@ -88,7 +111,12 @@ export const updateBook = async (id, updatedData) => {
 // DELETE book
 export const deleteBook = async (id) => {
   try {
-    const res = await axios.delete(`${BASE_URL}/${id}`);
+    const token = sessionStorage.getItem("token");
+    const res = await axios.delete(`${BASE_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return {
       success: true,

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-
+import { BrowserRouter, Routes, Route } from "react-router";
 import App from "./App";
 
 import {
@@ -19,15 +19,17 @@ ReactDOM.createRoot(
   document.getElementById("root")
 ).render(
 
-  <React.StrictMode>
-
+  
     <ThemeProvider theme={theme}>
 
       <CssBaseline />
+      <BrowserRouter>
 
-      <App />
+          <App/>
 
+      </BrowserRouter>
     </ThemeProvider>
 
-  </React.StrictMode>
+
+
 );

@@ -48,15 +48,17 @@ function ViewBook({ open, handleClose, bookId, setBooks }) {
       onClose={handleClose}
       maxWidth="lg"
       fullWidth
-      PaperProps={{
-        sx: {
-          borderRadius: 4,
-          p: {
-            xs: 1,
-            sm: 2,
+      slotProps={{
+        paper: {
+          sx: {
+            borderRadius: 4,
+            p: {
+              xs: 1,
+              sm: 2,
+            },
+            backgroundColor: "#fafafa",
           },
-          backgroundColor: "#fafafa",
-        },
+        }
       }}
     >
 
@@ -228,39 +230,39 @@ function ViewBook({ open, handleClose, bookId, setBooks }) {
           </Box>
 
           {/* RIGHT IMAGE */}
-         <Box
-  sx={{
-    width: {
-      xs: "100%",
-      md: 300,
-    },
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "flex-start",
-  }}
->
-  <Box
-    sx={{
-      width: "100%",
-      height: 380,
-      borderRadius: 4,
-      overflow: "hidden",
-      boxShadow: "0 4px 30px rgba(0,0,0,0.05)",
-      backgroundColor: "#f5f5f5",
-    }}
-  >
-    <img
-      src={book.image}
-      alt={book.title}
-      style={{
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        display: "block",
-      }}
-    />
-  </Box>
-</Box>
+          <Box
+            sx={{
+              width: {
+                xs: "100%",
+                md: 300,
+              },
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "flex-start",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                height: 380,
+                borderRadius: 4,
+                overflow: "hidden",
+                boxShadow: "0 4px 30px rgba(0,0,0,0.05)",
+                backgroundColor: "#f5f5f5",
+              }}
+            >
+              <img
+                src={book.image}
+                alt={book.title}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+            </Box>
+          </Box>
 
         </Box>
 
@@ -290,8 +292,8 @@ function ViewBook({ open, handleClose, bookId, setBooks }) {
               }}
             >
 
-           
-             <iframe
+
+              <iframe
                 src={book.pdf}
                 width="100%"
                 height="800px"
