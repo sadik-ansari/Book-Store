@@ -479,7 +479,7 @@ export default function LandingPage() {
         }}
         onRegister={async (values) => {
           try {
-            const res = await axios.post(`${BASE_URL}/api//`, values)
+            const res = await axios.post(`${BASE_URL}/api/`, values)
 
             if (res.status === 200) {
               sessionStorage.setItem("token", res.data.token)
